@@ -1,6 +1,10 @@
+import type { ReactNode } from 'react'
+
 export interface Slide {
   title: string
-  content: React.ReactNode
+  lead?: string
+  takeaway?: string
+  content: ReactNode
 }
 
 export interface Question {
