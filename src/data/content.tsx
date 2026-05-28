@@ -14,18 +14,45 @@ const categories: Category[] = [
             title: 'VAR 让图像像语言一样自回归生成',
             lead: '一种新的视觉生成方法：不再逐像素预测，而是逐尺度预测。',
             content: (
-              <div className="flex flex-col items-center justify-center h-full gap-6">
-                <div className="relative">
-                  <div className="text-[72px] font-title font-black text-ink tracking-tighter leading-none">
-                    VAR
+              <div className="flex items-center justify-center h-full gap-12 px-4">
+                {/* Left: core proposition */}
+                <div className="flex-1 max-w-lg">
+                  <div className="text-[11px] font-body tracking-wider text-primary mb-4" style={{ letterSpacing: '0.08em' }}>
+                    Visual Autoregressive Modeling
+                  </div>
+                  <div className="text-[28px] font-title font-bold text-ink leading-[1.2] mb-4" style={{ letterSpacing: '-0.02em' }}>
+                    图像生成的顺序变了：<br/>不是逐像素，而是逐尺度。
+                  </div>
+                  <div className="text-[15px] text-ink-2 leading-relaxed font-body mb-6">
+                    VAR 让图像像语言一样自回归生成，<br/>
+                    从低分辨率到高分辨率逐层预测。
+                  </div>
+                  <div className="flex gap-2">
+                    <span className="px-2.5 py-1 rounded-full text-[10px] font-medium bg-primary/10 text-primary">NeurIPS 2024</span>
+                    <span className="px-2.5 py-1 rounded-full text-[10px] font-medium bg-blue/10 text-blue">Best Paper</span>
                   </div>
                 </div>
-                <div className="text-[15px] tracking-[0.3em] uppercase font-body text-ink-3">
-                  Visual Autoregressive Modeling
-                </div>
-                <div className="flex gap-2 mt-2">
-                  <span className="px-2.5 py-1 rounded-full text-[11px] font-medium bg-primary/10 text-primary">NeurIPS 2024</span>
-                  <span className="px-2.5 py-1 rounded-full text-[11px] font-medium bg-blue/10 text-blue">Best Paper</span>
+                {/* Right: multi-scale diagram */}
+                <div className="flex-1 max-w-xs flex items-center justify-center">
+                  <div className="flex items-end gap-2">
+                    {[
+                      { pn: '1×1', h: 36, color: 'rgba(180,83,9,0.55)' },
+                      { pn: '2×2', h: 52, color: 'rgba(180,83,9,0.45)' },
+                      { pn: '4×4', h: 72, color: 'rgba(37,99,235,0.35)' },
+                      { pn: '8×8', h: 96, color: 'rgba(37,99,235,0.28)' },
+                      { pn: '16×16', h: 128, color: 'rgba(21,128,61,0.22)' },
+                    ].map((s, i) => (
+                      <div key={i} className="flex flex-col items-center gap-1.5">
+                        <div
+                          className="rounded-lg flex items-center justify-center border"
+                          style={{ width: `${44 + i * 14}px`, height: `${s.h}px`, background: s.color, borderColor: `${s.color}50` }}
+                        >
+                          <span className="text-white font-code text-[9px] font-bold">{s.pn}</span>
+                        </div>
+                        {i < 4 && <span className="text-[10px] text-ink-3">→</span>}
+                      </div>
+                    ))}
+                  </div>
                 </div>
               </div>
             ),

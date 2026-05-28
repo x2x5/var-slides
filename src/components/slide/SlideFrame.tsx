@@ -11,30 +11,30 @@ type SlideFrameProps = {
 export default function SlideFrame({ eyebrow, title, lead, takeaway, children }: SlideFrameProps) {
   return (
     <article className="flex flex-col h-full">
-      <header className="px-12 lg:px-16 pt-12 pb-4">
+      <header className="px-10 lg:px-14 pt-10 pb-3">
         {eyebrow && (
-          <p className="text-[11px] font-code tracking-widest text-ink-3 mb-3 uppercase">
+          <p className="text-[11px] font-body tracking-wider text-primary mb-2.5" style={{ letterSpacing: '0.06em' }}>
             {eyebrow}
           </p>
         )}
-        <h2 className="text-[28px] lg:text-[34px] font-title font-bold text-ink leading-tight">
+        <h2 className="text-[26px] lg:text-[32px] font-title font-bold text-ink leading-[1.15]" style={{ letterSpacing: '-0.02em' }}>
           {title}
         </h2>
         {lead && (
-          <p className="text-[17px] text-ink-2 mt-3 leading-relaxed max-w-2xl">
+          <p className="text-[16px] text-ink-2 mt-2.5 leading-relaxed max-w-xl font-body">
             {lead}
           </p>
         )}
-        <div className="w-10 h-[2px] bg-primary mt-4 rounded-full" />
+        <div className="w-8 h-[2px] bg-primary/40 mt-3 rounded-full" />
       </header>
 
-      <main className="flex-1 px-12 lg:px-16 py-4 overflow-hidden">
+      <main className="flex-1 px-10 lg:px-14 py-3 overflow-hidden">
         {children}
       </main>
 
       {takeaway && (
-        <footer className="px-12 lg:px-16 py-4 border-t border-line">
-          <p className="text-[13px] text-primary font-medium">
+        <footer className="px-10 lg:px-14 py-3 border-t border-line/60">
+          <p className="text-[12px] text-primary/80 font-body">
             {takeaway}
           </p>
         </footer>

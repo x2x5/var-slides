@@ -68,11 +68,11 @@ export default function SlideView({ question }: SlideViewProps) {
     return (
       <div className="flex-1 flex items-center justify-center" style={{ background: 'var(--color-bg)' }}>
         <div className="text-center">
-          <div className="text-6xl mb-6 opacity-15">📖</div>
-          <div className="text-xl font-title font-semibold text-ink-2 mb-2">
+          <div className="text-5xl mb-5 opacity-10">📖</div>
+          <div className="text-lg font-title font-semibold text-ink-2 mb-2">
             从左侧目录选择一个问题
           </div>
-          <div className="text-[13px] text-ink-3">
+          <div className="text-[12px] text-ink-3 font-body">
             键盘 ↑↓ 或两指滑动浏览
           </div>
         </div>
@@ -94,12 +94,12 @@ export default function SlideView({ question }: SlideViewProps) {
         onJump={jumpTo}
       />
 
-      {/* Scroll hint */}
-      {showHint && question.slides.length > 1 && (
-        <div className="absolute bottom-8 left-1/2 -translate-x-1/2 z-10 flex flex-col items-center gap-1 animate-bounce text-ink-3">
-          <span className="text-[11px] font-body">向下滑动继续</span>
-          <svg width="16" height="16" viewBox="0 0 16 16" fill="none">
-            <path d="M4 6l4 4 4-4" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
+      {/* Scroll hint — only on first slide */}
+      {showHint && currentSlide === 0 && question.slides.length > 1 && (
+        <div className="absolute bottom-6 left-1/2 -translate-x-1/2 z-10 flex flex-col items-center gap-1 text-ink-3/60">
+          <span className="text-[10px] font-body">向下滑动</span>
+          <svg width="14" height="14" viewBox="0 0 14 14" fill="none" className="animate-bounce">
+            <path d="M3 5l4 4 4-4" stroke="currentColor" strokeWidth="1.2" strokeLinecap="round" strokeLinejoin="round" />
           </svg>
         </div>
       )}
@@ -113,11 +113,11 @@ export default function SlideView({ question }: SlideViewProps) {
         {question.slides.map((slide, index) => (
           <section
             key={index}
-            className="h-screen snap-start snap-always grid place-items-center px-6 lg:px-12 py-16"
+            className="h-screen snap-start snap-always grid place-items-center px-5 lg:px-10 py-14"
           >
             <SlideCanvas>
               <SlideFrame
-                eyebrow={`${question.title} · ${String(index + 1).padStart(2, '0')} / ${String(question.slides.length).padStart(2, '0')}`}
+                eyebrow={question.title}
                 title={slide.title}
                 lead={slide.lead}
                 takeaway={slide.takeaway}
