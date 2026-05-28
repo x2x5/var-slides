@@ -113,7 +113,7 @@ export default function SlideView({ question }: SlideViewProps) {
         {question.slides.map((slide, index) => (
           <section
             key={index}
-            className="h-screen snap-start snap-always grid place-items-center px-5 lg:px-10 py-14"
+            className="h-screen snap-start snap-always flex items-center justify-center px-5 lg:px-8 py-10"
           >
             <SlideCanvas>
               <SlideFrame
