@@ -9,7 +9,6 @@ export default function SlideView({ question }: SlideViewProps) {
   const containerRef = useRef<HTMLDivElement>(null)
   const [currentSlide, setCurrentSlide] = useState(0)
 
-  // Reset scroll when question changes
   useEffect(() => {
     if (containerRef.current) {
       containerRef.current.scrollTop = 0
@@ -17,7 +16,6 @@ export default function SlideView({ question }: SlideViewProps) {
     }
   }, [question?.id])
 
-  // Track current slide on scroll
   const handleScroll = useCallback(() => {
     const container = containerRef.current
     if (!container) return
@@ -26,17 +24,17 @@ export default function SlideView({ question }: SlideViewProps) {
     setCurrentSlide(index)
   }, [])
 
-  // Keyboard navigation
   useEffect(() => {
     const container = containerRef.current
     if (!container) return
 
     const handleKeyDown = (e: KeyboardEvent) => {
       const slideHeight = container.clientHeight
+      const maxSlide = (question?.slides.length ?? 1) - 1
 
       if (e.key === 'ArrowDown' || e.key === ' ' || e.key === 'PageDown') {
         e.preventDefault()
-        const next = Math.min(currentSlide + 1, (question?.slides.length ?? 1) - 1)
+        const next = Math.min(currentSlide + 1, maxSlide)
         container.scrollTo({ top: next * slideHeight, behavior: 'smooth' })
       } else if (e.key === 'ArrowUp' || e.key === 'PageUp') {
         e.preventDefault()
@@ -47,8 +45,7 @@ export default function SlideView({ question }: SlideViewProps) {
         container.scrollTo({ top: 0, behavior: 'smooth' })
       } else if (e.key === 'End') {
         e.preventDefault()
-        const last = (question?.slides.length ?? 1) - 1
-        container.scrollTo({ top: last * slideHeight, behavior: 'smooth' })
+        container.scrollTo({ top: maxSlide * slideHeight, behavior: 'smooth' })
       }
     }
 
@@ -58,30 +55,47 @@ export default function SlideView({ question }: SlideViewProps) {
 
   if (!question) {
     return (
-      <div className="flex-1 flex items-center justify-center bg-gray-50">
-        <div className="text-center">
-          <div className="text-6xl mb-4">📖</div>
-          <div className="text-xl text-gray-400 font-light">从左侧目录选择一个问题</div>
-          <div className="text-sm text-gray-300 mt-2">或用键盘上下键浏览幻灯片</div>
+      <div className="flex-1 flex items-center justify-center paper-texture" style={{ background: 'var(--bg)' }}>
+        <div className="text-center animate-fade-up">
+          <div className="text-7xl mb-6 opacity-20">📖</div>
+          <div
+            className="text-2xl mb-3"
+            style={{ fontFamily: 'var(--serif)', color: 'var(--ink-light)' }}
+          >
+            从左侧目录选择一个问题
+          </div>
+          <div className="text-sm" style={{ color: 'var(--ink-muted)' }}>
+            键盘 ↑↓ 或两指滑动浏览
+          </div>
         </div>
       </div>
     )
   }
 
   return (
-    <div className="flex-1 relative bg-gray-50">
-      {/* Slide counter */}
-      <div className="absolute top-4 right-4 z-10 bg-white/80 backdrop-blur-sm rounded-lg px-3 py-1.5 text-sm text-gray-500 font-mono shadow-sm">
-        {currentSlide + 1} / {question.slides.length}
+    <div className="flex-1 relative paper-texture" style={{ background: 'var(--bg)' }}>
+      {/* Top bar */}
+      <div className="absolute top-0 left-0 right-0 z-10 flex items-center justify-between px-8 py-4">
+        <div
+          className="text-[13px] font-medium max-w-[60%] truncate"
+          style={{ fontFamily: 'var(--serif)', color: 'var(--ink-light)' }}
+        >
+          {question.title}
+        </div>
+        <div
+          className="text-[11px] font-mono px-2.5 py-1 rounded-md"
+          style={{
+            color: 'var(--ink-muted)',
+            background: 'rgba(255,255,255,0.6)',
+            backdropFilter: 'blur(8px)',
+          }}
+        >
+          {currentSlide + 1} / {question.slides.length}
+        </div>
       </div>
 
-      {/* Question title */}
-      <div className="absolute top-4 left-4 z-10 bg-white/80 backdrop-blur-sm rounded-lg px-3 py-1.5 text-sm text-gray-700 font-medium shadow-sm max-w-[60%] truncate">
-        {question.title}
-      </div>
-
-      {/* Progress dots */}
-      <div className="absolute right-4 top-1/2 -translate-y-1/2 z-10 flex flex-col gap-1.5">
+      {/* Progress dots — right side */}
+      <div className="absolute right-5 top-1/2 -translate-y-1/2 z-10 flex flex-col gap-2">
         {question.slides.map((_, i) => (
           <button
             key={i}
@@ -94,13 +108,25 @@ export default function SlideView({ question }: SlideViewProps) {
                 })
               }
             }}
-            className={`w-2 h-2 rounded-full transition-all ${
-              i === currentSlide
-                ? 'bg-violet-500 scale-125'
-                : 'bg-gray-300 hover:bg-gray-400'
-            }`}
-            title={question.slides[i].title}
-          />
+            className="group relative flex items-center justify-end"
+          >
+            <span
+              className="text-[9px] font-mono mr-2 opacity-0 group-hover:opacity-100 transition-opacity whitespace-nowrap"
+              style={{ color: 'var(--ink-muted)' }}
+            >
+              {i + 1}
+            </span>
+            <div
+              className={`rounded-full transition-all duration-300 ${
+                i === currentSlide
+                  ? 'w-2.5 h-2.5'
+                  : 'w-1.5 h-1.5 group-hover:w-2 group-hover:h-2'
+              }`}
+              style={{
+                background: i === currentSlide ? 'var(--accent)' : '#c8c0b6',
+              }}
+            />
+          </button>
         ))}
       </div>
 
@@ -109,21 +135,24 @@ export default function SlideView({ question }: SlideViewProps) {
         ref={containerRef}
         onScroll={handleScroll}
         className="h-full overflow-y-auto snap-y snap-mandatory"
-        style={{ scrollBehavior: 'smooth' }}
       >
         {question.slides.map((slide, index) => (
           <div
             key={index}
             className="h-full snap-start snap-always flex flex-col"
           >
-            {/* Slide title bar */}
-            <div className="px-8 pt-14 pb-2">
-              <h2 className="text-lg font-semibold text-gray-800">
+            {/* Slide title */}
+            <div className="px-8 pt-16 pb-3">
+              <h2
+                className="text-xl font-bold"
+                style={{ fontFamily: 'var(--serif)', color: 'var(--ink)' }}
+              >
                 {slide.title}
               </h2>
-              <div className="text-xs text-gray-400 mt-0.5">
-                第 {index + 1} 页 / 共 {question.slides.length} 页
-              </div>
+              <div
+                className="w-12 h-[2px] mt-2 rounded-full"
+                style={{ background: 'var(--accent)' }}
+              />
             </div>
 
             {/* Slide content */}

@@ -31,57 +31,79 @@ export default function Sidebar({
 
   return (
     <aside
-      className={`h-full bg-white border-r border-gray-200 flex flex-col transition-all duration-300 ease-in-out ${
-        collapsed ? 'w-12' : 'w-64'
+      className={`h-full flex flex-col transition-all duration-300 ease-in-out border-r ${
+        collapsed ? 'w-14' : 'w-72'
       }`}
+      style={{
+        background: 'linear-gradient(180deg, #f8f5f0 0%, #f3ede4 100%)',
+        borderColor: '#e0d8ce',
+      }}
     >
       {/* Header */}
-      <div className="flex items-center justify-between p-3 border-b border-gray-100">
+      <div
+        className="flex items-center gap-3 px-4 py-4 border-b"
+        style={{ borderColor: '#e0d8ce' }}
+      >
         {!collapsed && (
-          <span className="text-sm font-bold text-gray-700 truncate">VAR 论文解读</span>
+          <div className="flex-1 min-w-0">
+            <div
+              className="text-sm font-bold tracking-wide"
+              style={{ fontFamily: 'var(--serif)', color: 'var(--ink)' }}
+            >
+              VAR 论文解读
+            </div>
+            <div className="text-[10px] mt-0.5" style={{ color: 'var(--ink-muted)' }}>
+              NeurIPS 2024 Best Paper
+            </div>
+          </div>
         )}
         <button
           onClick={onToggleCollapse}
-          className="p-1.5 rounded-lg hover:bg-gray-100 text-gray-500 shrink-0"
+          className="p-1.5 rounded-md hover:bg-black/5 transition-colors shrink-0"
+          style={{ color: 'var(--ink-muted)' }}
           title={collapsed ? '展开目录' : '收起目录'}
         >
-          <svg width="16" height="16" viewBox="0 0 16 16" fill="none">
+          <svg width="14" height="14" viewBox="0 0 14 14" fill="none">
             {collapsed ? (
-              <path d="M6 3l5 5-5 5" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" />
+              <path d="M5 2.5l4.5 4.5-4.5 4.5" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
             ) : (
-              <path d="M10 3l-5 5 5 5" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" />
+              <path d="M9 2.5l-4.5 4.5 4.5 4.5" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
             )}
           </svg>
         </button>
       </div>
 
       {/* Tree */}
-      <nav className="flex-1 overflow-y-auto py-2">
+      <nav className="flex-1 overflow-y-auto py-3">
         {categories.map((cat) => (
-          <div key={cat.id}>
+          <div key={cat.id} className="mb-1">
             {/* Category header */}
             <button
               onClick={() => toggleCategory(cat.id)}
-              className={`w-full flex items-center gap-2 px-3 py-2 text-left hover:bg-gray-50 transition-colors ${
-                collapsed ? 'justify-center' : ''
+              className={`w-full flex items-center gap-2.5 px-4 py-2.5 text-left hover:bg-black/[0.03] transition-colors ${
+                collapsed ? 'justify-center px-0' : ''
               }`}
             >
-              <span className="text-base shrink-0">{cat.icon}</span>
+              <span className="text-sm shrink-0">{cat.icon}</span>
               {!collapsed && (
                 <>
-                  <span className="text-sm font-medium text-gray-700 flex-1 truncate">
+                  <span
+                    className="text-[13px] font-semibold flex-1 truncate tracking-wide"
+                    style={{ fontFamily: 'var(--serif)', color: 'var(--ink)' }}
+                  >
                     {cat.title}
                   </span>
                   <svg
-                    width="12"
-                    height="12"
-                    viewBox="0 0 12 12"
+                    width="10"
+                    height="10"
+                    viewBox="0 0 10 10"
                     fill="none"
-                    className={`shrink-0 transition-transform ${
+                    className={`shrink-0 transition-transform duration-200 ${
                       expandedCategories.has(cat.id) ? 'rotate-90' : ''
                     }`}
+                    style={{ color: 'var(--ink-muted)' }}
                   >
-                    <path d="M4 2l4 4-4 4" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" />
+                    <path d="M3.5 1.5l3.5 3.5-3.5 3.5" stroke="currentColor" strokeWidth="1.2" strokeLinecap="round" strokeLinejoin="round" />
                   </svg>
                 </>
               )}
@@ -91,28 +113,65 @@ export default function Sidebar({
             {!collapsed && expandedCategories.has(cat.id) && (
               <div>
                 {cat.questions.length === 0 ? (
-                  <div className="px-8 py-2 text-xs text-gray-400 italic">暂无问题</div>
+                  <div className="px-11 py-2 text-[11px] italic" style={{ color: 'var(--ink-muted)' }}>
+                    待添加
+                  </div>
                 ) : (
-                  cat.questions.map((q) => (
-                    <button
-                      key={q.id}
-                      onClick={() => onSelectQuestion(q.id)}
-                      className={`w-full text-left px-8 py-2 text-sm transition-colors ${
-                        activeQuestionId === q.id
-                          ? 'bg-violet-50 text-violet-700 font-medium border-r-2 border-violet-500'
-                          : 'text-gray-600 hover:bg-gray-50 hover:text-gray-800'
-                      }`}
-                    >
-                      <div className="truncate">{q.title}</div>
-                      <div className="text-[10px] text-gray-400 mt-0.5">{q.slides.length} 页</div>
-                    </button>
-                  ))
+                  cat.questions.map((q) => {
+                    const isActive = activeQuestionId === q.id
+                    return (
+                      <button
+                        key={q.id}
+                        onClick={() => onSelectQuestion(q.id)}
+                        className="w-full text-left px-6 py-2 transition-all duration-200 relative group"
+                        style={{
+                          background: isActive ? 'rgba(194, 65, 12, 0.06)' : 'transparent',
+                        }}
+                      >
+                        {/* Active indicator */}
+                        {isActive && (
+                          <div
+                            className="absolute left-0 top-1/2 -translate-y-1/2 w-[3px] h-5 rounded-r-full"
+                            style={{ background: 'var(--accent)' }}
+                          />
+                        )}
+                        <div className="pl-5">
+                          <div
+                            className="text-[13px] leading-snug transition-colors"
+                            style={{
+                              fontFamily: 'var(--serif)',
+                              color: isActive ? 'var(--accent)' : 'var(--ink-light)',
+                              fontWeight: isActive ? 600 : 400,
+                            }}
+                          >
+                            {q.title}
+                          </div>
+                          <div
+                            className="text-[10px] mt-0.5 font-mono"
+                            style={{ color: 'var(--ink-muted)' }}
+                          >
+                            {q.slides.length} 页
+                          </div>
+                        </div>
+                      </button>
+                    )
+                  })
                 )}
               </div>
             )}
           </div>
         ))}
       </nav>
+
+      {/* Footer */}
+      {!collapsed && (
+        <div
+          className="px-4 py-3 border-t text-[10px]"
+          style={{ borderColor: '#e0d8ce', color: 'var(--ink-muted)' }}
+        >
+          <div style={{ fontFamily: 'var(--mono)' }}>var.usegpt.top</div>
+        </div>
+      )}
     </aside>
   )
 }
